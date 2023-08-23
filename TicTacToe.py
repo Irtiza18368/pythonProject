@@ -11,6 +11,7 @@ board = [[' ', ' ', ' '],
          [' ', ' ', ' ']]
 
 current_player = 'X'
+player_scores = {'X': 0, 'O': 0}
 
 
 # Function for handling player input
@@ -20,7 +21,9 @@ def player_moves(row1, column1, button1):
         board[row1][column1] = current_player
         button1.config(text=current_player, state='disabled', relief='sunken')
         if check_win(current_player):
+            player_scores[current_player] += 1
             winner_name = "Tawsif"
+            update_scoreboard()
             messagebox.showinfo("Game Over", f" {winner_name} wins!")
             reset_game()
         elif check_tie():
@@ -28,6 +31,17 @@ def player_moves(row1, column1, button1):
             reset_game()
         else:
             switch_player()
+
+
+def update_scoreboard():
+    x_score_label.config(text=f"Player X: {player_scores['X']}")
+    o_score_label.config(text=f"Player O: {player_scores['O']}")
+
+
+x_score_label = tk.Label(root, text="Player X: 0", font=('Arial', 14))
+x_score_label.grid(row=3, column=0)
+o_score_label = tk.Label(root, text="Player O: 0", font=('Arial', 14))
+o_score_label.grid(row=3, column=1)
 
 
 # Update the game board in the GUI
@@ -87,7 +101,6 @@ for row in range(3):
         button.grid(row=row, column=column)
         button.config(command=lambda r=row, c=column, b=button: player_moves(r, c, b))
         button_list.append(button)
-
 
 # Start the GUI main loop
 
