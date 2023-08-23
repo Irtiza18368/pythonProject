@@ -20,10 +20,11 @@ def player_moves(row1, column1, button1):
         board[row1][column1] = current_player
         button1.config(text=current_player, state='disabled', relief='sunken')
         if check_win(current_player):
-            messagebox.showinfo("Game Over", f" {current_player} wins!")
+            winner_name = "Tawsif"
+            messagebox.showinfo("Game Over", f" {winner_name} wins!")
             reset_game()
         elif check_tie():
-            messagebox.showinfo("Game Over! It's a tie!")
+            messagebox.showinfo("Game Over", "Better luck next time")
             reset_game()
         else:
             switch_player()
@@ -60,7 +61,7 @@ def check_tie():
         for column1 in range(3):
             if board[row1][column1] == ' ':
                 return False
-        return True
+    return True
 
 
 def reset_game():
