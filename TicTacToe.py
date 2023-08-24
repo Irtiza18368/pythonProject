@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import random
 
 # Create the main window
 root = tk.Tk()
@@ -12,18 +13,37 @@ board = [[' ', ' ', ' '],
 
 current_player = 'X'
 player_scores = {'X': 0, 'O': 0}
+total_rounds = 10
+
+player_X_name = "Player Tawsif"
+player_O_name = "Player O"
+
+
+# Function to start the game
+def start_game():
+    for button in button_list:
+        button.config(state='normal')
+    reset_game()
+
+
+def ai_move():
+    empty_cells = [(i, j) for i in range(3) for j in range(3) if board[i][j] == ' ']
+    if empty_cells:
+        row, column = random.choice(empty_cells)
+        player_moves(row, column, button_list[row * 3 + column])
 
 
 # Function for handling player input
 
 def player_moves(row1, column1, button1):
+    global current_player
     if board[row1][column1] == ' ':
         board[row1][column1] = current_player
         button1.config(text=current_player, state='disabled', relief='sunken')
         if check_win(current_player):
             player_scores[current_player] += 1
-            winner_name = "Tawsif"
             update_scoreboard()
+            winner_name = player_X_name if current_player == 'X' else player_O_name
             messagebox.showinfo("Game Over", f" {winner_name} wins!")
             reset_game()
         elif check_tie():
@@ -31,16 +51,18 @@ def player_moves(row1, column1, button1):
             reset_game()
         else:
             switch_player()
+            if current_player == 'O':
+                ai_move()
 
 
 def update_scoreboard():
-    x_score_label.config(text=f"Player X: {player_scores['X']}")
-    o_score_label.config(text=f"Player O: {player_scores['O']}")
+    x_score_label.config(text=f"{player_X_name}: {player_scores['X']}")
+    o_score_label.config(text=f"{player_O_name}: {player_scores['O']}")
 
 
-x_score_label = tk.Label(root, text="Player X: 0", font=('Arial', 14))
+x_score_label = tk.Label(root, text=f"{player_X_name}: 0", font=('Arial', 10))
 x_score_label.grid(row=3, column=0)
-o_score_label = tk.Label(root, text="Player O: 0", font=('Arial', 14))
+o_score_label = tk.Label(root, text=f"{player_O_name}: 0", font=('Arial', 10))
 o_score_label.grid(row=3, column=1)
 
 
@@ -48,7 +70,7 @@ o_score_label.grid(row=3, column=1)
 def display_board():
     for i in range(3):
         for j in range(3):
-            cell_label = tk.Label(root, text=board[i][j], font=('Arial', 20), width=8, height=4,
+            cell_label = tk.Label(root, text=board[i][j], font=('Arial', 20), width=12, height=8,
                                   relief='solid')
             cell_label.grid(row=i, column=j)
 
@@ -103,5 +125,24 @@ for row in range(3):
         button_list.append(button)
 
 # Start the GUI main loop
+
+start_button = tk.Button(root, text="Start Game", font=('Arial', 10), command=start_game)
+start_button.grid(row=3, column=2, columnspan=4, rowspan=3)
+
+
+def reset_scores():
+    global player_scores
+    player_scores = {'X': 0, 'O': 0}
+    update_scoreboard()
+
+
+reset_scores_button = tk.Button(root, text="Reset Scores", font=('Arial', 10), command=reset_scores)
+reset_scores_button.grid(row=3, column=2)
+
+player_X_label = tk.Label(root, text=f"Player X: {player_X_name}", font=('Arial', 10))
+player_X_label.grid(row=4, column=0, columnspan=3)
+
+player_O_label = tk.Label(root, text=f"Player O: {player_O_name}", font=('Arial', 10))
+player_O_label.grid(row=5, column=0, columnspan=3)
 
 root.mainloop()
