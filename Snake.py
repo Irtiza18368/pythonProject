@@ -1,5 +1,4 @@
 import random
-
 import pygame
 
 # Initializing Pygame
@@ -14,10 +13,11 @@ pygame.display.set_caption("Snake Game")
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 # properties for building snake
 snake_size = 14
-snake_speed = 10
+snake_speed = 7
 
 # properties for the food
 food_size = 10
@@ -31,6 +31,10 @@ y = height // 2
 dx = 0
 dy = 0
 
+# Food instance
+normal_food = None
+special_food = None
+
 # Starting position of the food
 food_x = random.randint(0, width - food_size)
 food_y = random.randint(0, height - food_size)
@@ -41,6 +45,7 @@ font = pygame.font.Font(None, 24)
 snake_segments = []
 
 Time = pygame.time.Clock()
+timer_font = pygame.font.Font(None, 16)
 
 
 def add_segment():
@@ -50,9 +55,14 @@ def add_segment():
 def check_collision():
     if x < 0 or x + snake_size > width or y < 0 or y + snake_size > height:
         return True
-
     return False
 
+
+# Timer
+start_time = pygame.time.get_ticks()
+game_duration = 60  # in secs
+food_eaten = 0
+max_food_eaten = 10
 
 # Game loop
 running = True
@@ -76,6 +86,12 @@ while running:
                 dx = 0
                 dy = snake_speed
     if not Game_over:
+        current_timing = pygame.time.get_ticks()
+        elapsed_timing = (current_timing - start_time) // 1000
+
+        if elapsed_timing >= game_duration:
+            Game_over = True
+
         x += dx
         y += dy
 
@@ -104,6 +120,8 @@ while running:
         snake_score_text = font.render("Score:" + str(snake_score), True, GREEN)
         window.blit(snake_score_text, (10, 10))
 
+        timer_text = timer_font.render("Time:" + str(game_duration - elapsed_timing), True, GREEN)
+        window.blit(timer_text, (10, 30))
         pygame.display.update()
         Time.tick(30)
 
@@ -114,4 +132,5 @@ while running:
         window.blit(Game_over_text, (width // 2 - 100, height // 2 - 50))
         window.blit(snake_score_text, (width // 2 - 70, height // 2))
         pygame.display.update()
+
 pygame.quit()
