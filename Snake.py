@@ -20,8 +20,8 @@ snake_size = 14
 snake_speed = 7
 
 # properties for the food
-food_size = 10
-food_color = RED
+food_size = 20
+food_color = BLUE
 
 # Initial position of the snake
 x = width // 2
