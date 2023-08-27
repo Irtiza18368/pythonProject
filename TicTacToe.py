@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import random
 
 # Create the main window
@@ -16,14 +16,29 @@ player_scores = {'X': 0, 'O': 0}
 total_rounds = 10
 
 player_X_name = "Player Tawsif"
-player_O_name = "Player O"
+player_O_name = "Player XYZ"
+
+# Timer variables
+timer_interval = 10000  # Time in milliseconds (10 seconds)
+timer_remaining = tk.StringVar()
+timer_id = None
 
 
 # Function to start the game
+def get_player_names():
+    global player_X_name, player_O_name
+    player_X_name = simpledialog.askstring("Player Names", "Enter Player X's name:")
+    player_O_name = simpledialog.askstring("Player Names", "Enter Player O's name:")
+    update_scoreboard()
+
+
 def start_game():
     for button in button_list:
         button.config(state='normal')
     reset_game()
+    get_player_names()
+    update_scoreboard()
+    start_timer()  # Start the timer when the game starts
 
 
 def ai_move():
@@ -124,11 +139,6 @@ for row in range(3):
         button.config(command=lambda r=row, c=column, b=button: player_moves(r, c, b))
         button_list.append(button)
 
-# Start the GUI main loop
-
-start_button = tk.Button(root, text="Start Game", font=('Arial', 10), command=start_game)
-start_button.grid(row=3, column=2, columnspan=4, rowspan=3)
-
 
 def reset_scores():
     global player_scores
@@ -138,11 +148,5 @@ def reset_scores():
 
 reset_scores_button = tk.Button(root, text="Reset Scores", font=('Arial', 10), command=reset_scores)
 reset_scores_button.grid(row=3, column=2)
-
-player_X_label = tk.Label(root, text=f"Player X: {player_X_name}", font=('Arial', 10))
-player_X_label.grid(row=4, column=0, columnspan=3)
-
-player_O_label = tk.Label(root, text=f"Player O: {player_O_name}", font=('Arial', 10))
-player_O_label.grid(row=5, column=0, columnspan=3)
 
 root.mainloop()
