@@ -1,3 +1,4 @@
+from typing import List, Tuple
 import random
 import pygame
 
@@ -42,14 +43,17 @@ food_y = random.randint(0, height - food_size)
 snake_score = 0
 font = pygame.font.Font(None, 24)
 
-snake_segments = []
+snake_segments: List[Tuple[int, int]] = []
 
 Time = pygame.time.Clock()
 timer_font = pygame.font.Font(None, 16)
 
 
 def add_segment():
-    snake_segments.append((0, 0))
+    if snake_segments:
+        snake_segments.append(snake_segments[-1])
+    else:
+        snake_segments.append((x, y))
 
 
 def check_collision():
