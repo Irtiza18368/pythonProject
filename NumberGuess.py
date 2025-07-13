@@ -21,15 +21,15 @@ while guess_counter < chances:
         print(f"Correct! The number is {number}. You guessed it in {guess_counter} guesses.")
         break
 
-    elif number_guess != number and guess_counter >= chances:
-        print(f"Sorry! The number was {number}. Better luck next time.")
-
     elif number_guess > number:
         print("Too high! Try a lower number.")
     
-    elif number_guess < number:
-        print("Too low! Try a higher number")
-    
     else:
-        print("Invalid number")
+        print("Too low! Try a higher number.")
+
+    remaining_chance = chances - guess_counter
+    if remaining_chance > 0:
+        print(f"Chances left: {remaining_chance}")
+    else:
+        print(f"\n Sorry! You've run out of chances. The number was {number}")
 
